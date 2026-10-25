@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DETECT BUY – Check before you pay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Noto+Sans:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Bengali:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&family=Noto+Sans+Gujarati:wght@400;600&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Malayalam:wght@400;600&family=Noto+Sans+Gurmukhi:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e2a3a;--muted:#55707e;--paper:#eef6f3;--card:#fff;--line:#d5e5df;--green:#0a9d6e;--amber:#e49b1c;--red:#d8403a;--saffron:#f2a93b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 "Noto Sans","Noto Sans Devanagari","Noto Sans Bengali","Noto Sans Tamil","Noto Sans Telugu","Noto Sans Gujarati","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Gurmukhi",system-ui,sans-serif}
+h1,h2,h3,.brand{font-family:"Bricolage Grotesque","Noto Sans",sans-serif;line-height:1.1;margin:0}
+a{color:var(--green)}
+:focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 0;gap:12px;flex-wrap:wrap}
+.brand{font-size:24px;font-weight:800}.brand em{color:var(--green);font-style:normal}
+nav{display:flex;gap:16px;align-items:center}nav a{text-decoration:none;color:var(--ink);font-weight:600;font-size:14px}
+select{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;background:#fff;color:var(--ink)}
+.hero{display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:center;padding:24px 0 56px}
+.hero h1{font-size:clamp(36px,5.4vw,64px);font-weight:800;letter-spacing:-1.5px}
+.hero p.lead{font-size:18px;color:var(--muted);max-width:30em;margin:16px 0 0}
+.steps{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.steps span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:600;font-size:14px}
+.stage{perspective:1200px}
+.tool{background:var(--card);border-radius:22px;padding:22px;border:1px solid var(--line);box-shadow:0 30px 50px -24px rgba(14,42,58,.35),0 6px 0 #cfe3db;transform-style:preserve-3d;transition:transform .15s ease-out}
+.drop{border:2.5px dashed #8cc9b4;border-radius:16px;padding:26px 16px;text-align:center;background:#f6fbf9;cursor:pointer;transition:background .2s}
+.drop.over{background:#e1f5ec;border-color:var(--green)}
+.drop b{display:block;font-size:19px;font-family:"Bricolage Grotesque",sans-serif}
+.drop small{color:var(--muted)}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0}
+.thumbs div{position:relative}.thumbs img{width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block}
+.thumbs button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:var(--ink);color:#fff;cursor:pointer;padding:0;line-height:1}
+textarea,input[type=url]{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:14px;margin-top:10px}
+.go{width:100%;margin-top:12px;border:0;border-radius:14px;padding:15px;font:800 18px "Bricolage Grotesque",sans-serif;color:#fff;background:var(--green);box-shadow:0 5px 0 #067553;cursor:pointer}
+.go:active{transform:translateY(3px);box-shadow:0 2px 0 #067553}.go:disabled{opacity:.6;cursor:wait}
+#msg{min-height:22px;margin:10px 0 0;font-size:14px;color:var(--muted)}#msg.err{color:var(--red)}
+section{padding:44px 0}
+#result{display:none}
+.verdict{display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start}
+.stamp{border-radius:24px;padding:26px 20px;text-align:center;color:#fff;box-shadow:0 26px 40px -20px rgba(0,0,0,.4),0 7px 0 rgba(0,0,0,.18);transform:rotateX(6deg) rotateY(-8deg);transform-style:preserve-3d}
+.stamp.safe{background:var(--green)}.stamp.caution{background:var(--amber)}.stamp.risky{background:var(--red)}
+.stamp .grade{font:800 96px/1 "Bricolage Grotesque",sans-serif;text-shadow:0 5px 0 rgba(0,0,0,.2)}
+.stamp .big{font:800 24px/1.15 "Bricolage Grotesque",sans-serif;margin-top:6px}
+.meter{height:12px;border-radius:9px;background:rgba(255,255,255,.35);margin:16px 0 4px;overflow:hidden}.meter i{display:block;height:100%;background:#fff;border-radius:9px}
+.box{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:14px}
+.box h3{font-size:18px;margin-bottom:8px}
+ul.r{list-style:none;margin:0;padding:0}ul.r li{padding:7px 0 7px 30px;position:relative;border-top:1px solid #eef3f1}ul.r li:first-child{border:0}
+ul.r li::before{position:absolute;left:0;top:7px;font-weight:800}
+ul.r li.warning::before{content:"✕";color:var(--red)}ul.r li.good::before{content:"✓";color:var(--green)}ul.r li.tip::before{content:"›";color:var(--saffron)}
+.claim{border-left:5px solid var(--line);padding:6px 12px;margin:8px 0;background:#fafcfb;border-radius:0 10px 10px 0}
+.claim.high{border-color:var(--red);background:#fff2f0}.claim.medium{border-color:var(--amber);background:#fff8ea}.claim.low{border-color:var(--green);background:#eefaf4}
+.claim q{font-weight:600;display:block}.claim small{display:block;color:var(--muted)}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn{border:1px solid #9fd2bf;background:#fff;color:var(--green);border-radius:10px;padding:9px 14px;font:600 14px inherit;text-decoration:none;cursor:pointer}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.consent{font-size:13px;color:var(--muted);display:flex;gap:8px;margin-top:10px}
+.cartoons{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:22px}
+.cartoons figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:0 5px 0 #cfe3db}
+.cartoons svg{width:100%;height:auto;display:block}.cartoons figcaption{padding:10px 4px 2px}.cartoons b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:18px}
+.why{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:end}
+h2{font-size:clamp(28px,3.6vw,42px);font-weight:800;letter-spacing:-.8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:18px}
+.grid .box{margin:0}
+footer{padding:30px 0 50px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+@media(max-width:860px){.hero,.verdict,.why{grid-template-columns:1fr}.cartoons{grid-template-columns:1fr}.stamp{transform:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}.tool,.stamp{transform:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">Detect<em>Buy</em></div>
+  <nav><a href="#why">Why complain</a><a href="#extensions">Extensions</a><a href="#sources">Guidelines</a>
+    <select id="lang" aria-label="Language for results"></select></nav>
+</header>
+
+<main>
+<div class="hero">
+  <div>
+    <h1>Check it before you pay.</h1>
+    <p class="lead">Drop a photo, video or screenshot of an ad, product or shopping site. You get a red or green answer in seconds, in your own language.</p>
+    <div class="steps"><span>1 Upload</span><span>2 Read the verdict</span><span>3 Report if risky</span></div>
+  </div>
+  <div class="stage"><div class="tool" id="tool">
+    <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload photos, videos or screenshots">
+      <b>Drop ad photos, videos or screenshots here</b>
+      <small>or click to choose · you can also paste an image (Ctrl+V)</small>
+    </div>
+    <input id="file" type="file" accept="image/*,video/*" multiple hidden>
+    <div class="thumbs" id="thumbs"></div>
+    <textarea id="text" rows="3" placeholder="Optional: paste the product description or ad text"></textarea>
+    <input id="url" type="url" placeholder="Optional: website address (e.g. https://shop.example)">
+    <button class="go" id="go">Check now</button>
+    <p id="msg" role="status"></p>
+  </div></div>
+</div>
+
+<section id="result" aria-live="polite"><div class="verdict">
+  <div class="stamp" id="stamp"><div id="vlabel" class="big"></div><div class="grade" id="grade"></div><div class="meter"><i id="bar"></i></div><div id="vscore"></div></div>
+  <div>
+    <div class="box"><h3 id="headline"></h3><ul class="r" id="reasons"></ul></div>
+    <div class="box"><h3 id="ptitle"></h3><ul class="r" id="precautions"></ul></div>
+    <div class="box" id="claimsBox"><h3>Claims found</h3><div id="claims"></div></div>
+    <div class="box" id="reportBox"><h3>Report it</h3>
+      <p style="margin:0;color:var(--muted);font-size:14px">Your draft is ready. Edit it, then file it on the official portal. We never submit anything for you.</p>
+      <textarea id="draft" rows="8" aria-label="Complaint draft"></textarea>
+      <label class="consent"><input type="checkbox" id="consent"> I agree to copy this report and open the official portal myself.</label>
+      <div class="btns" id="portals"></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="why"><div class="why"><div>
+  <h2>One complaint can protect thousands of shoppers.</h2></div>
+  <p style="color:var(--muted);margin:0">Fake shops survive because most people just lose their money and stay silent. A complaint with a screenshot gives the regulator something to act on. Checking first stops the loss. Reporting afterwards helps shut the shop down.</p></div>
+  <div class="cartoons">
+    <figure><svg viewBox="0 0 300 200" role="img" aria-label="Shopper sees a too-good deal"><rect width="300" height="200" rx="14" fill="#fff4dc"/><rect x="150" y="30" width="130" height="90" rx="10" fill="#fff" stroke="#e49b1c" stroke-width="3"/><text x="165" y="70" font-size="26" font-weight="800" fill="#d8403a">90% OFF!</text><text x="165" y="98" font-size="13" fill="#55707e">Only 2 left · ends in 02:59</text><circle cx="70" cy="110" r="30" fill="#f3c9a0"/><path d="M40 105q30-45 60 0" fill="#3a2a22"/><circle cx="60" cy="112" r="4" fill="#0e2a3a"/><circle cx="82" cy="112" r="4" fill="#0e2a3a"/><ellipse cx="71" cy="128" rx="8" ry="6" fill="#0e2a3a"/><rect x="40" y="140" width="60" height="50" rx="14" fill="#0a9d6e"/><text x="108" y="62" font-size="22">❗</text></svg>
+      <figcaption><b>It looks too good</b>Huge discount, countdown timer, pressure to pay now.</figcaption></figure>
+    <figure><svg viewBox="0 0 300 200" role="img" aria-label="Detect Buy shield checks the site"><rect width="300" height="200" rx="14" fill="#e3f6ee"/><path d="M150 25l70 24v50c0 40-30 62-70 78-40-16-70-38-70-78V49z" fill="#0a9d6e"/><path d="M118 100l24 24 42-48" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="60" r="18" fill="#fff" stroke="#0e2a3a" stroke-width="4"/><path d="M65 73l16 16" stroke="#0e2a3a" stroke-width="6" stroke-linecap="round"/></svg>
+      <figcaption><b>Check first</b>Upload it. DETECT BUY shows green, amber or red and why.</figcaption></figure>
+    <figure><svg viewBox="0 0 300 200" role="img" aria-label="Complaint shuts down a fake shop"><rect width="300" height="200" rx="14" fill="#fde9e6"/><rect x="40" y="70" width="110" height="90" fill="#fff" stroke="#d8403a" stroke-width="3"/><path d="M30 70l15-30h100l15 30z" fill="#d8403a"/><rect x="62" y="100" width="30" height="60" fill="#f3c9a0"/><path d="M40 160h110" stroke="#0e2a3a" stroke-width="4"/><rect x="170" y="55" width="90" height="112" rx="10" fill="#fff" stroke="#0e2a3a" stroke-width="3"/><rect x="182" y="70" width="66" height="8" rx="4" fill="#cfe3db"/><rect x="182" y="86" width="50" height="8" rx="4" fill="#cfe3db"/><circle cx="215" cy="130" r="20" fill="#0a9d6e"/><path d="M205 130l8 8 14-16" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/><text x="52" y="125" font-size="12" font-weight="800" fill="#d8403a" transform="rotate(-12 52 125)">CLOSED</text></svg>
+      <figcaption><b>Report, so others are safe</b>Your complaint gives the regulator proof to act on.</figcaption></figure>
+  </div>
+</section>
+
+<section id="extensions"><h2>Two helpers that follow you while you shop</h2>
+  <div class="grid">
+    <div class="box"><h3>Detector extension</h3><p>Like a spell-checker for shopping. A small badge on every shop shows a grade. Click it for a full AI check. Folder: <code>extension-detector</code></p></div>
+    <div class="box"><h3>Language extension</h3><p>Translates any page or selected text into your language, in simple words. Folder: <code>extension-translator</code></p></div>
+    <div class="box"><h3>Install in Chrome</h3><p>Open <code>chrome://extensions</code>, turn on Developer mode, choose Load unpacked, pick the folder. Then paste this website's address in the extension's Settings.</p></div>
+  </div>
+</section>
+
+<section id="sources"><h2>Built on official guidance</h2>
+  <p style="color:var(--muted);max-width:44em">Results are screening aids based on these public sources. DETECT BUY is not a government service and a result is not a legal finding.</p>
+  <div class="grid" id="src"></div>
+</section>
+</main>
+<footer>DETECT BUY gives information only. A green result means no major warning signs were found, not a guarantee. Always check the seller, the return policy and use a payment method you can dispute.</footer>
+</div>
+
+<script>
+const LANGS={en:"English",hi:"हिन्दी",mr:"मराठी",bn:"বাংলা",ta:"தமிழ்",te:"తెలుగు",gu:"ગુજરાતી",kn:"ಕನ್ನಡ",ml:"മലയാളം",pa:"ਪੰਜਾਬੀ",or:"ଓଡ଼ିଆ",ur:"اردو",as:"অসমীয়া"};
+const UI={en:["Safe to buy","Be careful","Don’t buy yet","Grade","What we found","Before you pay"],
+ hi:["खरीदना सुरक्षित","सावधान रहें","अभी न खरीदें","ग्रेड","हमें क्या मिला","पैसे देने से पहले"],
+ mr:["खरेदी सुरक्षित","सावध रहा","आत्ता खरेदी करू नका","ग्रेड","आम्हाला काय आढळले","पैसे देण्यापूर्वी"]};
+const AUTH={consumer:["National Consumer Helpline (1915)","https://consumerhelpline.gov.in/"],food:["FSSAI Food Safety Connect","https://foscos.fssai.gov.in/consumergrievance"],bis:["Bureau of Indian Standards","https://www.bis.gov.in/"],ad:["ASCI ad complaints","https://www.ascionline.in/complaint-faq/"],cyber:["Cyber Crime Portal","https://cybercrime.gov.in/"],pib:["PIB Fact Check","https://factcheck.pib.gov.in/"]};
+const SRC=[["Department of Consumer Affairs","https://consumeraffairs.nic.in/","Consumer Protection Act 2019, E-Commerce Rules 2020"],["CCPA","https://consumeraffairs.nic.in/","Misleading ads 2022 and dark patterns 2023 guidelines"],["Jago Grahak Jago","https://consumerhelpline.gov.in/","Awareness and the National Consumer Helpline"],["FSSAI","https://www.fssai.gov.in/","Food labelling and claims"],["BIS","https://www.bis.gov.in/","ISI, Hallmark and CRS marks"],["ASCI","https://www.ascionline.in/","Advertising Code"],["PIB Fact Check","https://factcheck.pib.gov.in/","Fake government and scheme claims"]];
+const $=id=>document.getElementById(id);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e};
+
+for(const[k,v]of Object.entries(LANGS))$("lang").add(new Option(v,k));
+$("lang").value=localStorage.getItem("db_lang")||"en";$("lang").onchange=()=>localStorage.setItem("db_lang",$("lang").value);
+for(const[n,u,d]of SRC){const b=el("div","box");const h=el("h3");const a=el("a","",n);a.href=u;a.target="_blank";a.rel="noopener";h.append(a);b.append(h,el("p","",d));$("src").append(b)}
+
+// 3D tilt
+const tool=$("tool");
+if(!matchMedia("(prefers-reduced-motion:reduce)").matches&&matchMedia("(hover:hover)").matches){
+ tool.parentElement.addEventListener("mousemove",e=>{const r=tool.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;tool.style.transform=`rotateY(${x*8}deg) rotateX(${-y*8}deg)`});
+ tool.parentElement.addEventListener("mouseleave",()=>tool.style.transform="")}
+
+// files
+const media=[];
+function say(m,err){$("msg").textContent=m;$("msg").className=err?"err":""}
+function addThumb(src){media.push(src);const d=el("div"),i=new Image();i.src=src;i.alt="Selected upload";const x=el("button","","×");x.setAttribute("aria-label","Remove");x.onclick=()=>{media.splice(media.indexOf(src),1);d.remove()};d.append(i,x);$("thumbs").append(d)}
+function shrink(src,max=1280){return new Promise(res=>{const i=new Image();i.onload=()=>{const k=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*k;c.height=i.height*k;c.getContext("2d").drawImage(i,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.8))};i.onerror=()=>res(null);i.src=src})}
+function frames(file){return new Promise(res=>{const v=document.createElement("video");v.muted=true;v.preload="auto";v.src=URL.createObjectURL(file);const out=[];
+ v.onloadedmetadata=async()=>{const t=[.15,.5,.85].map(p=>p*(v.duration||1));for(const s of t){await new Promise(r=>{v.onseeked=r;v.currentTime=s});const c=document.createElement("canvas"),k=Math.min(1,1280/Math.max(v.videoWidth,v.videoHeight));c.width=v.videoWidth*k;c.height=v.videoHeight*k;c.getContext("2d").drawImage(v,0,0,c.width,c.height);out.push(c.toDataURL("image/jpeg",.8))}URL.revokeObjectURL(v.src);res(out)};v.onerror=()=>res([])})}
+async function take(files){for(const f of files){if(media.length>=4){say("Maximum 4 images or frames.",1);break}
+ if(f.type.startsWith("image/")){const s=await shrink(URL.createObjectURL(f));if(s)addThumb(s)}
+ else if(f.type.startsWith("video/")){say("Reading video…");for(const s of await frames(f)){if(media.length<4)addThumb(s)}say("")}}}
+$("drop").onclick=()=>$("file").click();$("drop").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();$("file").click()}};
+$("file").onchange=e=>{take([...e.target.files]);e.target.value=""};
+["dragover","dragenter"].forEach(n=>$("drop").addEventListener(n,e=>{e.preventDefault();$("drop").classList.add("over")}));
+["dragleave","drop"].forEach(n=>$("drop").addEventListener(n,e=>{e.preventDefault();$("drop").classList.remove("over")}));
+$("drop").addEventListener("drop",e=>take([...e.dataTransfer.files]));
+addEventListener("paste",e=>{const f=[...(e.clipboardData?.files||[])];if(f.length)take(f)});
+
+// analyse
+$("go").onclick=async()=>{
+ const text=$("text").value.trim(),url=$("url").value.trim();
+ if(!media.length&&text.length<20&&!url)return say("Add a photo, video, screenshot or some text first.",1);
+ $("go").disabled=true;say("Checking against consumer-protection guidance…");
+ try{
+  const r=await fetch("/api/analyze",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text:text||("Website address given by shopper: "+url),url,images:media,lang:$("lang").value})});
+  const d=await r.json();if(!r.ok)throw new Error(d.error||"Something went wrong.");
+  render(d);say("")}catch(e){say(e.message,1)}finally{$("go").disabled=false}};
+
+function render(d){
+ const L=UI[$("lang").value]||UI.en,idx={safe:0,caution:1,risky:2}[d.verdict];
+ $("result").style.display="block";
+ $("stamp").className="stamp "+d.verdict;$("vlabel").textContent=L[idx];$("grade").textContent=d.grade;
+ $("bar").style.width=d.score+"%";$("vscore").textContent=d.score+" / 100";
+ $("headline").textContent=(d.product_name?d.product_name+": ":"")+(d.headline||"");
+ const rs=$("reasons");rs.replaceChildren();(d.reasons||[]).forEach(x=>rs.append(el("li",x.kind==="good"?"good":"warning",x.text)));
+ $("ptitle").textContent=L[5];const ps=$("precautions");ps.replaceChildren();
+ [...(d.precautions||[]),...(d.missing_info||[]).map(m=>"Ask for: "+m)].forEach(x=>ps.append(el("li","tip",x)));
+ const cl=$("claims");cl.replaceChildren();
+ (d.claims||[]).forEach(c=>{const r=["low","medium","high"].includes(c.risk)?c.risk:"medium",b=el("div","claim "+r);b.append(el("q","",c.text||""),el("span","",c.plain_meaning||""));
+  if(c.evidence_needed)b.append(el("small","","Evidence to ask for: "+c.evidence_needed));if(c.rule)b.append(el("small","","Related guidance: "+c.rule));cl.append(b)});
+ $("claimsBox").style.display=(d.claims||[]).length?"":"none";
+ $("draft").value=d.complaint_draft||"";$("reportBox").style.display=d.verdict==="safe"?"none":"";
+ const p=$("portals");p.replaceChildren();
+ (d.routes?.length?d.routes:["consumer"]).filter(k=>AUTH[k]).forEach(k=>{const a=el("a","btn dark","Open "+AUTH[k][0]);a.href=AUTH[k][1];a.target="_blank";a.rel="noopener";
+  a.onclick=async e=>{if(!$("consent").checked){e.preventDefault();say("Tick the box to confirm you will file this yourself.",1);return}try{await navigator.clipboard.writeText($("draft").value)}catch{}};p.append(a)});
+ const c=el("button","btn","Copy draft");c.onclick=async()=>{await navigator.clipboard.writeText($("draft").value);c.textContent="Copied"};p.append(c);
+ $("result").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"})}
+</script>
+</body>
+</html>

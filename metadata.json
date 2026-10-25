@@ -1,0 +1,6 @@
+{
+  "name": "DETECT BUY – AI Consumer Protection Platform",
+  "description": "Detect Before You Buy. AI-powered consumer protection platform for Indian consumers aligned with the Consumer Protection Act 2019, CCPA Guidelines, BIS CARE, FSSAI, and Jago Grahak Jago.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

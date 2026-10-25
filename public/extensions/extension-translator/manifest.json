@@ -1,0 +1,7 @@
+{ "manifest_version": 3, "name": "DETECT BUY – Language Helper", "version": "1.0.0",
+  "description": "Translate any shopping page or selected text into your language, in simple words.",
+  "permissions": ["storage", "activeTab", "scripting", "contextMenus"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "action": { "default_popup": "popup.html", "default_title": "DETECT BUY Language Helper" },
+  "options_page": "options.html" }

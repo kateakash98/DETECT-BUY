@@ -1,0 +1,8 @@
+{ "manifest_version": 3, "name": "DETECT BUY – Shopping Detector", "version": "1.0.0",
+  "description": "A small badge on shopping pages: grade, red/green verdict and an AI check before you pay.",
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [{ "matches": ["http://*/*", "https://*/*"], "js": ["content.js"], "run_at": "document_idle" }],
+  "action": { "default_title": "DETECT BUY: show or hide badge" },
+  "options_page": "options.html" }
